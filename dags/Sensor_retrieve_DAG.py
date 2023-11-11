@@ -50,7 +50,7 @@ def process_data():
 
     # Set the API
     # http://(confidential)/api/node_1/temperature/from=2022-01-01
-    base_url = "http://172.104.52.184:6717/api/"
+    base_url = "http://(confidential)/api/"
 
     # Loop untuk setiap node
     for node in range(1, 3):  # cuma dapetin 1 dan 2
