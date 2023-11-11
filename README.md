@@ -5,6 +5,9 @@ Technology used: *Python, Selenium, Apache Airflow, Hadoop Distributed File Syst
 ## Abstract
 Smart farming combines Information and communication technologies (ICT) with traditional agricultural practices to improve the quality and quantity of agricultural products. These ICTs could be Unmanned Aerial Vehicles (UAVs) or drones, artificial intelligence, robots, and sensors. In Smart Farming systems, various data types are needed, such as food prices, sensors, weather, images, and video. The data can be structured, semi-structured, or unstructured. Therefore, a system that can integrate Smart Farming data with versatility characteristics is needed to empower various types of analysis. In this study, the authors suggested using a Smart Farming Data Lake System based on Apache Airflow as data integration automation technology, Hadoop Distribution File System (HDFS) as data storage technology, and Metabase as dashboard technology.
 
+## Architecture Design
+![Architecture Design](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/Architecture%20Design.jpg)
+
 ## Prerequisite
 
 - Python 3
@@ -35,5 +38,5 @@ Smart farming combines Information and communication technologies (ICT) with tra
 
 ## Output
 The outcome was a:
-- [*Weather info*](), [*food prices*](), and [*sensor data*]() dataset that presents results in expected format.
+- [*Weather info*](https://github.com/Xedonedron/data-lake-for-smart-farming/tree/main/Weather%20Info), [*food prices info*](https://github.com/Xedonedron/data-lake-for-smart-farming/tree/main/Food%20Prices%20Info), and [*sensor data*](https://github.com/Xedonedron/data-lake-for-smart-farming/tree/main/Sensor%20Data) dataset that presents results in expected format.
 - [*Dashboard*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/Dashboard/metabase%20dashboard.png) from Metabase Business Intelligence
