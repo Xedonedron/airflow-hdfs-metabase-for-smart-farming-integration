@@ -31,6 +31,7 @@ Smart farming combines Information and communication technologies (ICT) with tra
 - [*Web_Scraper_DAG*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/dags/Web_Scraper_DAG.py)
 - [*Sensor_retrieve_DAG*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/dags/Sensor_retrieve_DAG.py)
 - [*Camera_data_capture*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/dags/Camera_data_capture.py)
+- [*SQL Query for Metabase*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/Dashboard/Metabase%20Dashboard%20Query.txt)
 
 ## Output
 The outcome was a:
