@@ -1,0 +1,66 @@
+Total task completed filter
+select count(*) from task_instance
+WHERE {{date_filter}}
+
+Total success filter
+select count(*) from task_instance
+WHERE {{date_filter}} and state="success"
+
+Total failed filter
+select count(*) from task_instance
+WHERE {{date_filter}} and state="failed"
+
+Average Web Scrapper DAG running time filter
+select avg(duration) AS avg_duration_seconds
+from task_instance
+where dag_id={{dag_name}} and {{date_filter}}
+
+Average InfluxDB DAG running time filter
+select avg(duration) AS avg_duration_seconds
+from task_instance
+where dag_id="Sensor_InfluxDB_Retriever_DAG" and {{date_filter}}
+
+Average RasPi DAG running time filter
+select avg(duration) AS avg_duration_seconds
+from task_instance
+where dag_id="raspberry_pi_camera_DAG" and {{date_filter}}
+
+Average duration Eksperimen filter
+SELECT task_id, MAX(duration) AS "max_duration (s)", AVG(duration) AS avg_duration
+FROM task_instance
+where dag_id={{dag_name}} and {{date_filter}}
+GROUP BY task_id
+order by "max_duration (s)" desc
+
+State Task Status filter
+select state, count(*) from task_instance
+WHERE {{date_filter}}
+group by state
+
+DAG runtime filter
+SELECT subquery.dag_id, subquery.time_stamp, SUM(subquery.duration) AS total_duration
+FROM (
+    SELECT dag_id, REPLACE(SUBSTR(REPLACE(REPLACE(run_id, 'scheduled_', ''), 'manual_', ''), 1, 16), 'T', ' ') AS time_stamp, SUM(duration) AS duration
+    FROM task_instance
+    WHERE dag_id = {{dag_name}} AND {{date_filter}}
+    GROUP BY run_id
+    ORDER BY time_stamp DESC
+    LIMIT 12
+) AS subquery
+GROUP BY subquery.dag_id, subquery.time_stamp
+ORDER BY subquery.time_stamp ASC;
+
+
+Crash frequency
+SELECT subquery.dag_id, subquery.time_stamp, SUM(subquery.total_failed) AS total_failed
+FROM (
+    SELECT dag_id, REPLACE(SUBSTR(REPLACE(REPLACE(run_id, 'scheduled_', ''), 'manual_', ''), 1, 16), 'T', ' ') AS time_stamp,
+      CASE WHEN state != 'success' THEN COUNT(*) ELSE 0 END AS total_failed
+    FROM task_instance
+    WHERE dag_id = {{dag_name}} AND {{date_filter}}
+    GROUP BY run_id
+    ORDER BY time_stamp DESC
+    LIMIT 12
+) AS subquery
+GROUP BY subquery.dag_id, subquery.time_stamp
+ORDER BY subquery.time_stamp ASC;
