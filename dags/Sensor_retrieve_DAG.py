@@ -49,7 +49,7 @@ def process_data():
     date = one_day_ago.strftime("%Y-%m-%d")
 
     # Set the API
-    # http://172.104.52.184:6717/api/node_1/temperature/from=2022-01-01
+    # http://(confidential)/api/node_1/temperature/from=2022-01-01
     base_url = "http://172.104.52.184:6717/api/"
 
     # Loop untuk setiap node
