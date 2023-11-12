@@ -35,7 +35,7 @@ Enclosed is the architectural design envisaged for the successful completion of 
 - [*Web_Scraper_DAG*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/dags/Web_Scraper_DAG.py)
   For extract the data automatically from the website, consist wather forecast information for evey region in a day separate in 6 hours, and food prices info for every comodity with 5 days past price from traditional and modern market.
 - [*Sensor_retrieve_DAG*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/dags/Sensor_retrieve_DAG.py)
-  For extract the data from InfluxDB Database automatically using API, the sensor data consist such as battery, nitrogen, potassium, soil ph, and many more. 
+  For extract the data from InfluxDB Database automatically using API, the sensor data consist such as battery, nitrogen, potassium, soil ph, and many more that generate every 5 minute.
 - [*Camera_data_capture*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/dags/Camera_data_capture.py)
   For send a command automatically through the Raspberry Pi using SSH connection for capture an image and record a video.
 - [*SQL Query for Metabase*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/Dashboard/Metabase%20Dashboard%20Query.txt)
