@@ -17,7 +17,7 @@ Enclosed is the architectural design envisaged for the successful completion of 
 - Pandas 2.0.1
 - Hadoop 3.2.1
 - Apache Airflow 2.6.1
-- Metabase v0.43.1
+- Metabase 0.43.1
 
 ## Process
 
@@ -33,9 +33,13 @@ Enclosed is the architectural design envisaged for the successful completion of 
 
 ## Source code: Python script (DAG file) & SQL Query for Metabase
 - [*Web_Scraper_DAG*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/dags/Web_Scraper_DAG.py)
+  For extract the data automatically from the website, consist wather forecast information for evey region in a day separate in 6 hours, and food prices info for every comodity with 5 days past price from traditional and modern market.
 - [*Sensor_retrieve_DAG*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/dags/Sensor_retrieve_DAG.py)
+  For extract the data from InfluxDB Database automatically using API, the sensor data consist such as battery, nitrogen, potassium, soil ph, and many more. 
 - [*Camera_data_capture*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/dags/Camera_data_capture.py)
+  For send a command automatically through the Raspberry Pi using SSH connection for capture an image and record a video.
 - [*SQL Query for Metabase*](https://github.com/Xedonedron/data-lake-for-smart-farming/blob/main/Dashboard/Metabase%20Dashboard%20Query.txt)
+  The query that i've create for analyze the Airflow databae such as average execution time for each DAG, how much the successful or fail task, and to identify how much the DAG crash or not in a week.
 
 ## Output
 The outcome was a:
