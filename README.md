@@ -1,4 +1,4 @@
-# Airflow, HDFS, Metabase - Data Lake for Smart Farming
+# Automatic Data Heterogeneous Integration - Airflow, Hadoop, Metabase
 
 Technology used: *Python, Selenium, Apache Airflow, Hadoop Distributed File System, Metabase*
 
