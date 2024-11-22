@@ -1,66 +1,73 @@
-Total task completed filter
+-- Total Success Tasks
 select count(*) from task_instance
-WHERE {{date_filter}}
+WHERE {{date_filter}} and state= 'success'
 
-Total success filter
+-- Total Failed Task
 select count(*) from task_instance
-WHERE {{date_filter}} and state="success"
+WHERE {{date_filter}} and state= 'failed' and {{dag_name}}
 
-Total failed filter
-select count(*) from task_instance
-WHERE {{date_filter}} and state="failed"
+-- Total DAG
+select count(distinct(dag_id)) from task_instance
 
-Average Web Scrapper DAG running time filter
-select avg(duration) AS avg_duration_seconds
+-- Average DAG Runtime
+-- SELECT
+--     TO_CHAR(
+--         TO_TIMESTAMP(
+--             REGEXP_REPLACE(run_id, '^(scheduled__|manual__)', ''), 
+--             'YYYY-MM-DD"T"HH24:MI:SS'
+--         ), 
+--         'YYYY-MM-DD HH24:MI') as time_stamp,
+--         avg(duration)
+-- from task_instance
+-- where dag_id = 'ShopEZ_DAG'
+-- group by time_stamp
+
+SELECT
+    avg(duration)
 from task_instance
-where dag_id={{dag_name}} and {{date_filter}}
+WHERE {{date_filter}} and {{dag_name}}
 
-Average InfluxDB DAG running time filter
-select avg(duration) AS avg_duration_seconds
-from task_instance
-where dag_id="Sensor_InfluxDB_Retriever_DAG" and {{date_filter}}
-
-Average RasPi DAG running time filter
-select avg(duration) AS avg_duration_seconds
-from task_instance
-where dag_id="raspberry_pi_camera_DAG" and {{date_filter}}
-
-Average duration Eksperimen filter
-SELECT task_id, MAX(duration) AS "max_duration (s)", AVG(duration) AS avg_duration
-FROM task_instance
-where dag_id={{dag_name}} and {{date_filter}}
-GROUP BY task_id
-order by "max_duration (s)" desc
-
-State Task Status filter
+-- State Task Status filter
 select state, count(*) from task_instance
 WHERE {{date_filter}}
 group by state
 
-DAG runtime filter
-SELECT subquery.dag_id, subquery.time_stamp, SUM(subquery.duration) AS total_duration
-FROM (
-    SELECT dag_id, REPLACE(SUBSTR(REPLACE(REPLACE(run_id, 'scheduled_', ''), 'manual_', ''), 1, 16), 'T', ' ') AS time_stamp, SUM(duration) AS duration
-    FROM task_instance
-    WHERE dag_id = {{dag_name}} AND {{date_filter}}
-    GROUP BY run_id
-    ORDER BY time_stamp DESC
-    LIMIT 12
-) AS subquery
-GROUP BY subquery.dag_id, subquery.time_stamp
-ORDER BY subquery.time_stamp ASC;
+-- DAG Duration based on filter
+SELECT MAX(duration) AS "max_duration (s)", AVG(duration) AS avg_duration, task_id
+FROM task_instance
+where {{dag_name}} and {{date_filter}}
+GROUP BY task_id, dag_id
+order by "max_duration (s)" desc
 
+-- DAG runtime
+    select
+        TO_CHAR(
+            TO_TIMESTAMP(
+                REGEXP_REPLACE(run_id, '^(scheduled__|manual__)', ''), 
+                'YYYY-MM-DD"T"HH24:MI:SS'
+            ), 
+            'YYYY-MM-DD HH24:MI'
+        ) AS time_stamp,
+        sum(duration) as total_duration
+    from task_instance
+    where {{dag_name}}
+    group by time_stamp
+    order by time_stamp
 
-Crash frequency
-SELECT subquery.dag_id, subquery.time_stamp, SUM(subquery.total_failed) AS total_failed
+-- Crash frequency
+SELECT
+    subquery.time_stamp,
+    CASE WHEN SUM(subquery.total_failed) > 0 THEN 1 ELSE 0 END AS dag_failed
 FROM (
-    SELECT dag_id, REPLACE(SUBSTR(REPLACE(REPLACE(run_id, 'scheduled_', ''), 'manual_', ''), 1, 16), 'T', ' ') AS time_stamp,
-      CASE WHEN state != 'success' THEN COUNT(*) ELSE 0 END AS total_failed
+    SELECT
+        TO_CHAR(
+            TO_TIMESTAMP(REGEXP_REPLACE(run_id, '^(scheduled__|manual__)', ''), 'YYYY-MM-DD"T"HH24:MI:SS'),
+            'YYYY-MM-DD'
+        ) AS time_stamp,
+        COUNT(CASE WHEN state != 'success' THEN 1 ELSE NULL END) AS total_failed
     FROM task_instance
-    WHERE dag_id = {{dag_name}} AND {{date_filter}}
-    GROUP BY run_id
-    ORDER BY time_stamp DESC
-    LIMIT 12
+    WHERE {{dag_id}} AND {{date_filter}}
+    GROUP BY time_stamp
 ) AS subquery
-GROUP BY subquery.dag_id, subquery.time_stamp
+GROUP BY subquery.time_stamp
 ORDER BY subquery.time_stamp ASC;
